@@ -1,80 +1,65 @@
-import Logo from "@/components/login/Logo";
-import DecorativeShapes from "@/components/login/DecorativeShapes";
-import LoginForm from "@/components/login/LoginForm";
-import SocialIcons from "@/components/login/SocialIcons";
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../lib/firebase"; // adjust path if needed
 
-const Login = () => {
-  const handleSignUpClick = () => {
-    // Navigate to signup page or open signup modal
-    console.log("Sign up clicked");
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login successful");
+    } catch (err: any) {
+      alert(err.message);
+    }
   };
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Panel - Gradient with decorations */}
-      <div className="hidden lg:flex lg:w-1/2 login-gradient relative overflow-hidden">
-        {/* Decorative shapes */}
-        <DecorativeShapes />
-
-        {/* Content */}
-        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          {/* Logo */}
-          <div className="animate-slide-in-left">
-            <Logo />
-          </div>
-
-          {/* Welcome Text */}
-          <div className="animate-slide-in-left" style={{ animationDelay: "0.2s" }}>
-            <h1 className="text-5xl font-bold text-primary-foreground leading-tight mb-4">
-              Hello,
-              <br />
-              welcome!
-            </h1>
-            <p className="text-primary-foreground/80 max-w-sm leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisi risus.
-            </p>
-          </div>
-
-          {/* Spacer */}
-          <div />
+      {/* Left panel */}
+      <div className="hidden md:flex w-1/2 bg-gradient-to-br from-teal-400 to-blue-500 text-white items-center justify-center p-10">
+        <div>
+          <h1 className="text-4xl font-bold mb-4">Hello, welcome!</h1>
+          <p className="opacity-90">
+            Login to continue to your dashboard
+          </p>
         </div>
       </div>
 
-      {/* Right Panel - Login Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 bg-background relative">
-        {/* Mobile Logo */}
-        <div className="lg:hidden absolute top-6 left-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary" />
-            <span className="font-bold text-primary">YOUR LOGO</span>
-          </div>
+      {/* Right panel */}
+      <div className="w-full md:w-1/2 flex items-center justify-center">
+        <div className="w-full max-w-sm p-8 rounded-xl shadow-lg">
+          <h2 className="text-2xl font-semibold mb-6 text-center">
+            Login
+          </h2>
+
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button
+            onClick={handleLogin}
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            Login
+          </button>
+
+          <p className="text-sm text-center mt-4 text-gray-500 cursor-pointer hover:underline">
+            Forgot password?
+          </p>
         </div>
-
-        {/* Form Container */}
-        <div className="w-full max-w-md animate-fade-in">
-          {/* Mobile Welcome */}
-          <div className="lg:hidden text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back!</h1>
-            <p className="text-muted-foreground">Sign in to continue</p>
-          </div>
-
-          {/* Login Form */}
-          <div className="bg-card rounded-2xl shadow-xl p-8 border border-border/50">
-            <LoginForm onSignUpClick={handleSignUpClick} />
-          </div>
-
-          {/* Social Icons */}
-          <div className="mt-8 flex justify-center">
-            <SocialIcons />
-          </div>
-        </div>
-
-        {/* Background decoration for mobile */}
-        <div className="lg:hidden absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 blur-3xl" />
-        <div className="lg:hidden absolute -top-20 -left-20 w-48 h-48 rounded-full bg-gradient-to-br from-secondary/10 to-primary/10 blur-3xl" />
       </div>
     </div>
   );
-};
-
-export default Login;
+}
