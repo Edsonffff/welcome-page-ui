@@ -1,54 +1,62 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-react";
 import Logo from "@/components/login/Logo";
 import DecorativeShapes from "@/components/login/DecorativeShapes";
 import SocialIcons from "@/components/login/SocialIcons";
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Firebase error message mapping for user-friendly messages
   const getErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
-      case "auth/wrong-password":
-        return "Incorrect password. Please try again.";
-      case "auth/user-not-found":
-        return "No account found with this email.";
+      case "auth/email-already-in-use":
+        return "This email is already registered. Please login instead.";
+      case "auth/weak-password":
+        return "Password should be at least 6 characters.";
       case "auth/invalid-email":
         return "Please enter a valid email address.";
-      case "auth/user-disabled":
-        return "This account has been disabled.";
-      case "auth/too-many-requests":
-        return "Too many failed attempts. Please try again later.";
-      case "auth/invalid-credential":
-        return "Invalid email or password. Please check and try again.";
+      case "auth/operation-not-allowed":
+        return "Email/password accounts are not enabled.";
       default:
         return "An error occurred. Please try again.";
     }
   };
 
-  // Handle login with Firebase signInWithEmailAndPassword
-  const handleLogin = async (e: React.FormEvent) => {
+  // Handle signup with Firebase createUserWithEmailAndPassword
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // Firebase login - authenticates user with email and password
-      await signInWithEmailAndPassword(auth, email, password);
-      // Redirect to dashboard on successful login
+      // Firebase signup - creates new user with email and password
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Redirect to dashboard on successful signup
       navigate("/dashboard");
     } catch (err: any) {
       // Handle Firebase auth errors
@@ -66,15 +74,15 @@ export default function Login() {
         <div className="relative z-10 text-white max-w-md animate-slide-in-left">
           <Logo />
           <h1 className="text-5xl font-bold mb-4 font-poppins leading-tight">
-            Hello, welcome!
+            Join us today!
           </h1>
           <p className="text-white/80 text-lg leading-relaxed">
-            Login to continue to your dashboard and explore all features.
+            Create your account and start your journey with us.
           </p>
         </div>
       </div>
 
-      {/* Right Panel - Login Form */}
+      {/* Right Panel - Signup Form */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-12 bg-background">
         <div className="w-full max-w-md space-y-8 animate-fade-in">
           {/* Mobile Logo */}
@@ -86,10 +94,10 @@ export default function Login() {
 
           <div className="text-center">
             <h2 className="text-3xl font-bold text-foreground font-poppins">
-              Login
+              Create Account
             </h2>
             <p className="text-muted-foreground mt-2">
-              Enter your credentials to access your account
+              Fill in the details to get started
             </p>
           </div>
 
@@ -100,7 +108,7 @@ export default function Login() {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleSignup} className="space-y-5">
             {/* Email Input */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground font-medium">
@@ -135,28 +143,24 @@ export default function Login() {
               />
             </div>
 
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="remember"
-                  checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                  disabled={isLoading}
-                />
-                <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
-                  Remember me
-                </Label>
-              </div>
-              <button
-                type="button"
-                className="text-sm text-login-primary hover:underline font-medium"
-              >
-                Forgot password?
-              </button>
+            {/* Confirm Password Input */}
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-foreground font-medium">
+                Confirm Password
+              </Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="input-login"
+                required
+                disabled={isLoading}
+              />
             </div>
 
-            {/* Login Button */}
+            {/* Sign Up Button */}
             <Button
               type="submit"
               className="w-full h-12 login-gradient text-white font-semibold rounded-xl hover:opacity-90 transition-all duration-300 shadow-lg"
@@ -165,25 +169,24 @@ export default function Login() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
+                  Creating account...
                 </>
               ) : (
-                "Login"
+                "Sign Up"
               )}
             </Button>
-
-            {/* Sign Up Link */}
-            <Link to="/signup" className="block">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full h-12 rounded-xl font-semibold border-2 hover:bg-muted transition-all duration-300"
-                disabled={isLoading}
-              >
-                Sign Up
-              </Button>
-            </Link>
           </form>
+
+          {/* Login Link */}
+          <p className="text-center text-muted-foreground">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-login-primary font-semibold hover:underline"
+            >
+              Login
+            </Link>
+          </p>
 
           {/* Social Icons */}
           <SocialIcons />
