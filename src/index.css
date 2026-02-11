@@ -15,38 +15,38 @@
     --popover: 0 0% 100%;
     --popover-foreground: 200 20% 20%;
 
-    --primary: 187 85% 43%;
+    --primary: 270 60% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 175 70% 50%;
+    --secondary: 320 55% 45%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 187 30% 95%;
-    --muted-foreground: 200 15% 50%;
+    --muted: 270 20% 90%;
+    --muted-foreground: 270 10% 50%;
 
-    --accent: 165 60% 55%;
+    --accent: 15 90% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 187 40% 80%;
-    --input: 187 40% 85%;
-    --ring: 187 85% 43%;
+    --border: 270 30% 70%;
+    --input: 270 30% 80%;
+    --ring: 270 60% 50%;
 
     --radius: 0.75rem;
 
     /* Custom login page tokens */
-    --gradient-start: 187 85% 43%;
-    --gradient-mid: 175 75% 48%;
-    --gradient-end: 165 70% 55%;
+    --gradient-start: 265 65% 20%;
+    --gradient-mid: 285 55% 30%;
+    --gradient-end: 310 50% 35%;
     
-    --shape-primary: 187 80% 50%;
-    --shape-secondary: 175 70% 60%;
-    --shape-accent: 165 65% 65%;
+    --shape-primary: 280 50% 40%;
+    --shape-secondary: 310 45% 50%;
+    --shape-accent: 15 80% 55%;
     
-    --input-border: 187 85% 43%;
-    --input-focus: 187 90% 50%;
+    --input-border: 270 30% 50%;
+    --input-focus: 270 60% 60%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -68,28 +68,28 @@
     --popover: 200 25% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 187 85% 50%;
-    --primary-foreground: 200 25% 8%;
+    --primary: 270 60% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 175 70% 45%;
+    --secondary: 320 55% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 200 20% 18%;
-    --muted-foreground: 200 15% 65%;
+    --muted: 270 15% 18%;
+    --muted-foreground: 270 10% 65%;
 
-    --accent: 165 60% 50%;
+    --accent: 15 90% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 200 20% 25%;
-    --input: 200 20% 25%;
-    --ring: 187 85% 50%;
+    --border: 270 20% 30%;
+    --input: 270 20% 25%;
+    --ring: 270 60% 55%;
 
-    --gradient-start: 187 80% 35%;
-    --gradient-mid: 175 70% 40%;
-    --gradient-end: 165 65% 45%;
+    --gradient-start: 265 65% 15%;
+    --gradient-mid: 285 55% 25%;
+    --gradient-end: 310 50% 30%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -149,12 +149,18 @@
 
   .btn-primary-login {
     @apply btn-login text-primary-foreground;
-    background: hsl(var(--primary));
+    background: linear-gradient(135deg, hsl(var(--shape-accent)) 0%, hsl(15 85% 50%) 50%, hsl(45 90% 55%) 100%);
   }
 
   .btn-primary-login:hover {
-    background: hsl(var(--primary) / 0.9);
-    box-shadow: 0 10px 30px -10px hsl(var(--primary) / 0.5);
+    background: linear-gradient(135deg, hsl(var(--shape-accent)) 0%, hsl(15 85% 50%) 50%, hsl(45 90% 55%) 100%);
+    box-shadow: 0 10px 30px -10px hsl(var(--shape-accent) / 0.5);
+  }
+
+  .glass-card {
+    background: hsl(var(--gradient-mid) / 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--shape-secondary) / 0.2);
   }
 
   .btn-secondary-login {
